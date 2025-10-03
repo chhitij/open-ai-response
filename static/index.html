@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Ask - Simple UI</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="chat-app">
+      <header class="chat-header">
+        <h1>Assistant</h1>
+        <p class="sub">Ask questions about the uploaded documents</p>
+      </header>
+
+      <main id="messages" class="messages" aria-live="polite">
+        <!-- Message bubbles will be appended here -->
+      </main>
+
+      <footer class="chat-input">
+        <div class="auth-row">
+          <input id="auth" type="password" placeholder="Auth token" />
+        </div>
+        <div class="input-row">
+          <textarea id="question" placeholder="Type your message and press Enter to send (Shift+Enter for newline)" rows="2"></textarea>
+          <button id="ask">Send</button>
+        </div>
+      </footer>
+    </div>
+
+    <script src="/static/main.js"></script>
+  </body>
+</html>
