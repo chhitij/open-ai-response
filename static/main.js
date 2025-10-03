@@ -3,10 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const questionEl = document.getElementById('question')
   const authEl = document.getElementById('auth')
   const messagesEl = document.getElementById('messages')
+  const quickQs = document.getElementById('quick-questions')
 
   function appendMessage(text, side = 'bot', meta = null) {
     const wrapper = document.createElement('div')
     wrapper.className = `message ${side}`
+
+    const role = document.createElement('div')
+    role.className = 'role'
+    role.textContent = side === 'user' ? 'You' : 'Assistant'
+    wrapper.appendChild(role)
 
     const bubble = document.createElement('div')
     bubble.className = 'bubble'
@@ -120,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const lastBot = bots[bots.length - 1]
       if (lastBot) lastBot.querySelector('.bubble').textContent = 'Network error: ' + e.message
     }
+  }
+
+  // wire quick question chips
+  if (quickQs) {
+    quickQs.addEventListener('click', (e) => {
+      const btn = e.target.closest('.chip')
+      if (!btn) return
+      questionEl.value = btn.textContent
+      // small delay so UI updates before sending
+      setTimeout(() => sendQuestion(), 120)
+    })
   }
 
   askBtn.addEventListener('click', sendQuestion)

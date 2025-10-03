@@ -8,24 +8,46 @@
   </head>
   <body>
     <div class="chat-app">
-      <header class="chat-header">
-        <h1>Assistant</h1>
-        <p class="sub">Ask questions about the uploaded documents</p>
+      <header class="chat-header brand">
+        <div class="brand-left">
+          <div class="logo-circle">OA</div>
+          <div>
+            <h1>OpenAI Client Response</h1>
+            <p class="sub">Ask questions about the uploaded documents</p>
+          </div>
+        </div>
       </header>
 
-      <main id="messages" class="messages" aria-live="polite">
-        <!-- Message bubbles will be appended here -->
-      </main>
+      <div class="chat-body">
+        <aside class="sidebar">
+          <h3>About</h3>
+          <p class="muted">This UI lets you query uploaded documents. The server runs a file-search tool and uses the Responses API (client.responses.create) to answer from retrieved content.</p>
 
-      <footer class="chat-input">
-        <div class="auth-row">
-          <input id="auth" type="password" placeholder="Auth token" />
-        </div>
-        <div class="input-row">
-          <textarea id="question" placeholder="Type your message and press Enter to send (Shift+Enter for newline)" rows="2"></textarea>
-          <button id="ask">Send</button>
-        </div>
-      </footer>
+          <h4>Quick questions</h4>
+          <div id="quick-questions" class="chips">
+            <button class="chip">What is the capital of India?</button>
+            <button class="chip">Summarize the first PDF</button>
+            <button class="chip">List any dates mentioned</button>
+          </div>
+        </aside>
+
+        <main class="main-area">
+          <main id="messages" class="messages" aria-live="polite">
+            <!-- Message bubbles will be appended here -->
+          </main>
+
+          <footer class="chat-input">
+            <div class="auth-row">
+              <input id="auth" type="password" placeholder="Auth token" />
+            </div>
+            <div class="explain">Tip: the backend calls <code>client.responses.create(...)</code> which runs a model and may include a file_search tool to find text inside uploaded PDFs.</div>
+            <div class="input-row">
+              <textarea id="question" placeholder="Type your message and press Enter to send (Shift+Enter for newline)" rows="2"></textarea>
+              <button id="ask">Send</button>
+            </div>
+          </footer>
+        </main>
+      </div>
     </div>
 
     <script src="/static/main.js"></script>
