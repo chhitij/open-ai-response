@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const questionEl = document.getElementById('question')
   const authEl = document.getElementById('auth')
   const messagesEl = document.getElementById('messages')
-  const quickQs = document.getElementById('quick-questions')
+  // attach to all chip buttons (there may be multiple containers)
+  const chips = document.querySelectorAll('.chip')
 
   function appendMessage(text, side = 'bot', meta = null) {
     const wrapper = document.createElement('div')
@@ -121,21 +122,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         lastBot.appendChild(metaEl)
       }
+      // after response received, ensure send button is visible/enabled and focus textarea
+      updateSendButtonState()
+      if (askBtn.style.display === 'none') askBtn.style.display = ''
+      questionEl.focus()
     } catch (e) {
       const bots = messagesEl.querySelectorAll('.message.bot')
       const lastBot = bots[bots.length - 1]
       if (lastBot) lastBot.querySelector('.bubble').textContent = 'Network error: ' + e.message
+      // on error, restore send button so user can retry
+      updateSendButtonState()
+      if (askBtn.style.display === 'none') askBtn.style.display = ''
+      questionEl.focus()
     }
   }
 
-  // wire quick question chips
-  if (quickQs) {
-    quickQs.addEventListener('click', (e) => {
-      const btn = e.target.closest('.chip')
-      if (!btn) return
-      questionEl.value = btn.textContent
-      // small delay so UI updates before sending
-      setTimeout(() => sendQuestion(), 120)
+  // enable/disable send button based on auth token presence
+  function updateSendButtonState() {
+    const hasAuth = Boolean(authEl.value && authEl.value.trim())
+    askBtn.disabled = !hasAuth
+  }
+
+  // initialize button state
+  updateSendButtonState()
+  authEl.addEventListener('input', updateSendButtonState)
+
+  // wire quick question chips: attach to each .chip button so all work
+  if (chips && chips.length) {
+    chips.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.textContent.trim()
+        const cur = questionEl.value || ''
+        questionEl.value = cur ? (cur.trimEnd() + '\n' + text) : text
+        questionEl.focus()
+        questionEl.selectionStart = questionEl.selectionEnd = questionEl.value.length
+      })
     })
   }
 
@@ -145,7 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
   questionEl.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
-      sendQuestion()
+      // only send if auth token is provided
+      if (authEl.value && authEl.value.trim()) {
+        sendQuestion()
+      } else {
+        // focus the auth input to encourage entering token
+        authEl.focus()
+      }
     }
   })
 })
